@@ -1,23 +1,23 @@
 {
-  "name": "hw-mongodb",
+  "name": "students-app-98",
   "version": "1.0.0",
-  "description": "App for managing contacts",
+  "description": "App for managing students",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "lint": "eslint src/**/*.js",
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "Viktoriia",
+  "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@eslint/js": "^9.3.0",
-    "eslint": "^9.3.0",
-    "globals": "^15.3.0",
-    "nodemon": "^3.1.1",
-    "pino-pretty": "^11.1.0"
+    "@eslint/js": "^9.2.0",
+    "eslint": "^9.2.0",
+    "globals": "^15.2.0",
+    "nodemon": "^3.1.0",
+    "pino-pretty": "^11.0.0"
   },
   "dependencies": {
     "cors": "^2.8.5",
