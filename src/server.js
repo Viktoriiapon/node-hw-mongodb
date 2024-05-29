@@ -84,7 +84,7 @@ export const setupServer = () => {
     }),
   );
 
-  app.get('/contactsForHw', async (req, res) => {
+  app.get('/contacts', async (req, res) => {
     try {
       const contacts = await getAllContacts();
       res.json({
@@ -101,7 +101,7 @@ export const setupServer = () => {
     }
   });
 
-  app.get('/contactsForHw/:contactId', async (req, res) => {
+  app.get('/contacts/:contactId', async (req, res) => {
     const contactId = req.params.contactId;
     try {
       const contact = await getContactById(contactId);
