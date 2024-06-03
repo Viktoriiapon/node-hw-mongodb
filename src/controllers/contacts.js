@@ -1,9 +1,10 @@
+import createHttpError from 'http-errors';
 import {
   createContact,
   deleteContact,
   getAllContacts,
   getContactById,
-  upsertContact,
+  updateContact,
 } from '../services/contacts.js';
 
 export const getContactsController = async (req, res) => {
@@ -38,15 +39,15 @@ export const createContactsController = async (req, res) => {
   });
 };
 
-export const patchContactsController = async (req, res) => {
-  const { body } = req;
+export const patchContactsController = async (req, res, next) => {
+  
   const { contactId } = req.params;
-  const { contact } = await upsertContact(contactId, body);
+  const contact = await updateContact(contactId, req.body);
 
-  res.status(200).json({
+  res.json({
     status: 200,
     message: `Successfully patched a contact!`,
-    data: contact,
+    data: contact.contact,
   });
 };
 
@@ -63,10 +64,11 @@ export const patchContactsController = async (req, res) => {
 //     });
 //   };
 
-export const deleteContactsController = async (req, res) => {
+export const deleteContactsController = async (req, res, next) => {
   const contactId = req.params.contactId;
 
   await deleteContact(contactId);
 
-  res.status(204).send();
+
+  res.sendStatus(204);
 };

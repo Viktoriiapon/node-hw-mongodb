@@ -22,23 +22,41 @@ export const createContact = async (payload) => {
    return contact;
  };
 
- export const upsertContact = async (contactId, payload, options = {})=>{
-   const rawResult = await Contact.findByIdAndUpdate(contactId , payload, { 
-      new: true, 
-      includeResultMetadata: true,
-      ...options,});
-      if (!rawResult && rawResult.value ) {
-      throw createHttpError(404, 'Contact not found');
+//  export const updateContact = async (contactId, payload = {})=>{
+//    const rawResult = await Contact.findByIdAndUpdate(contactId , payload, { 
+//       new: true, 
+//       includeResultMetadata: true,
+//       });
+//       if (!rawResult && rawResult.value ) {
+//       throw createHttpError(404, 'Contact not found');
      
-    }
-   return {
-      contact: rawResult.value,
-      isNew: Boolean( rawResult.lastErrorObject.upserted),
-   };
+//     }
+    
+//    return {
+//       contact: rawResult.value,
+//       isNew: Boolean( rawResult.lastErrorObject.upserted),
+//    };
 
- }
+//  }
+
+export const updateContact = async (contactId, payload = {}) => {
+  const contact = await Contact.findByIdAndUpdate(contactId, payload, { 
+    new: true, 
+  });
+
+  if (!contact) {
+    throw createHttpError(404, 'Contact not found');
+  }
+
+  return { contact };
+};
+
 
  export const deleteContact = async (contactId) => {
    const contact = await Contact.findByIdAndDelete(contactId);
+   if (!contact) {
+    throw createHttpError(404, 'Contact not found');
+  
+  }
 
  };
