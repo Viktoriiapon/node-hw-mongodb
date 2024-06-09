@@ -1,7 +1,8 @@
 import createHttpError from 'http-errors';
 import { Contact } from '../db/models/contact.js';
+import {SORT_ORDER} from '../constants/index.js'
 
-const createPaginationInformation=(page, perPage, count)=>{
+const createPaginationInformation = (page, perPage, count)=>{
   const totalPages = Math.ceil(count/perPage);
   const hasPreviousPage = page >1;
   const hasNextPage = page <totalPages;
@@ -16,11 +17,35 @@ hasNextPage
 }
 }
 
-export const getAllContacts = async ({page = 1, perPage = 5}) => {
+export const getAllContacts =async ({
+  page = 1,
+   perPage = 5,
+   sortOrder = SORT_ORDER.ASC,
+  sortBy = 'name',
+filter ={},
+}) => {
   const skip = perPage * (page - 1);
-  const contactsAmount =await Contacts.find().countDocuments();
-  const paginationInformation = (page, perPage, contactsAmount);
-  const contacts = await Contact.find().skip(skip).limit(perPage);
+
+  const contactsQuery = Contact.find();
+
+  if (filter.contactType) {
+    contactsQuery.where('contactType').equals(filter.contactType);
+  }
+  if (filter.isFavourite) {
+    contactsQuery.where('isFavourite').equals(filter.isFavourite);
+  }
+
+  const[contactsAmount, contacts] = await Promise.all([
+    Contact.find().countDocuments(), 
+    contactsQuery
+    .skip(skip)
+    .limit(perPage)
+    .sort({ [sortBy]: sortOrder })
+    .exec() ])
+  const paginationInformation = createPaginationInformation(page, perPage, contactsAmount);
+ 
+
+ 
 
   return {
     contacts,

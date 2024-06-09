@@ -11,25 +11,25 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { createContactSchema, updateContactSchema } from '../validation/contact.js';
 
 
-export const getContactsRouter = Router();
+export const contactsRouter = Router();
 
-getContactsRouter.get('/contacts',
+contactsRouter.get('/contacts',
 
 ctrlWrapper(getContactsController));
 
-  getContactsRouter.get('/contacts/:contactId', ctrlWrapper(getContactsByIdController));
+contactsRouter.get('/contacts/:contactId', ctrlWrapper(getContactsByIdController));
 
-  getContactsRouter.post('/contacts',
+contactsRouter.post('/contacts',
   validateBody(createContactSchema),
   ctrlWrapper(createContactsController));
 
-  getContactsRouter.patch('/contacts/:contactId',
+  contactsRouter.patch('/contacts/:contactId',
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactsController));
 
 //   getContactsRouter.put('/contacts/:contactId', ctrlWrapper(putContactsController));
 
-  getContactsRouter.delete('/contacts/:contactId', ctrlWrapper(deleteContactsController));
+contactsRouter.delete('/contacts/:contactId', ctrlWrapper(deleteContactsController));
 
   
 
