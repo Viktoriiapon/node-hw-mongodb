@@ -9,6 +9,7 @@ import {
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { createContactSchema } from '../validation/contact.js';
 
 export const getContactsController = async (req, res) => {
  
@@ -29,7 +30,7 @@ export const getContactsController = async (req, res) => {
     data: contacts,
   });
 };
-export const getContactsByIdController = async (req, res) => {
+export const getContactsByIdController = async (req, res, next) => {
   const contactId = req.params.contactId;
 
   const contact = await getContactById(contactId);
@@ -41,10 +42,10 @@ export const getContactsByIdController = async (req, res) => {
   });
 };
 
-export const createContactsController = async (req, res) => {
+export const createContactsController = async (req, res, next) => {
   const { body } = req;
 
-  const contact = await createContact(body);
+  const contact = await createContactSchema.validate(body);
 
   res.status(201).json({
     status: 201,
