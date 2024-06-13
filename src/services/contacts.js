@@ -63,9 +63,9 @@ export const getContactById = async (contactId) => {
 };
 
 export const createContact = async (payload) => {
-  const contact = await Contact.create(payload);
+  const newContact = await Contact.create(payload);
 
-  return contact;
+  return newContact;
 };
 
 //  export const updateContact = async (contactId, payload = {})=>{
