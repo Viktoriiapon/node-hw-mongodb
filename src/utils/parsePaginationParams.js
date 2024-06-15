@@ -14,7 +14,7 @@ const parseNumber = (number, defaultNumber) => {
   
     return {
       page: parseNumber(page, 1),
-      perPage: parseNumber(perPage, 30),
+      perPage: parseNumber(perPage, 5),
     };
   };
 
