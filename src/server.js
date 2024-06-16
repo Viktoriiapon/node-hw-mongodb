@@ -10,7 +10,8 @@ import { ENV_VARS } from './constants/index.js';
 import { errorHandlerMiddleware } from './middlewares/errorHandler.js';
 import { notFoundMiddleware } from './middlewares/notFoundHandler.js';
 
-import { contactsRouter } from './routers/contacts.js';
+
+import rootRouter from './routers/index.js';
 
 export const setupServer = () => {
   const app = express();
@@ -27,7 +28,7 @@ export const setupServer = () => {
 
   app.use(express.json());
 
- app.use(contactsRouter);
+ app.use(rootRouter);
  
 
   app.use(notFoundMiddleware);
