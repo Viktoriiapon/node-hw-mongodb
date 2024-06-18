@@ -6,6 +6,7 @@ import { createContactsController,
        patchContactsController,
         // putContactsController
      } from '../controllers/contacts.js';
+import { authenticate } from '../middlewares/authenticate.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { createContactSchema, updateContactSchema } from '../validation/contact.js';
@@ -13,9 +14,9 @@ import { createContactSchema, updateContactSchema } from '../validation/contact.
 
 export const contactsRouter = Router();
 
-contactsRouter.get('/',
+contactsRouter.use('/', authenticate);
 
-ctrlWrapper(getContactsController));
+contactsRouter.get('/',ctrlWrapper(getContactsController));
 
 contactsRouter.get('/:contactId', ctrlWrapper(getContactsByIdController));
 
