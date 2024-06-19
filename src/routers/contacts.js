@@ -14,7 +14,8 @@ import { createContactSchema, updateContactSchema } from '../validation/contact.
 
 export const contactsRouter = Router();
 
-contactsRouter.use('/', authenticate);
+contactsRouter.use(authenticate);
+
 
 contactsRouter.get('/',ctrlWrapper(getContactsController));
 
