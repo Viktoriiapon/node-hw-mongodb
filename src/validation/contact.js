@@ -1,5 +1,3 @@
-
-
 import Joi from 'joi';
 
 export const createContactSchema = Joi.object({
@@ -9,7 +7,6 @@ export const createContactSchema = Joi.object({
   isFavourite: Joi.boolean(),
   contactType: Joi.string().min(3).max(20).valid('work', 'home', 'personal'),
   // parentId: Joi.string().required(), //new//
-
 });
 
 export const updateContactSchema = Joi.object({
@@ -18,10 +15,4 @@ export const updateContactSchema = Joi.object({
   phoneNumber: Joi.string().min(3).max(20),
   isFavourite: Joi.boolean(),
   contactType: Joi.string().min(3).max(20).valid('work', 'home', 'personal'),
-
 });
-
-
-
-
-

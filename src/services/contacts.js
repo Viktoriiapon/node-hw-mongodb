@@ -1,32 +1,35 @@
 import createHttpError from 'http-errors';
 import { Contact } from '../db/models/contact.js';
-import {SORT_ORDER} from '../constants/index.js'
+import { SORT_ORDER } from '../constants/index.js';
 
-const createPaginationInformation = (page, perPage, count)=>{
-  const totalPages = Math.ceil(count/perPage);
-  const hasPreviousPage = page >1;
-  const hasNextPage = page <totalPages;
-return { 
-  page,
-perPage,
-totalItems: count,
-totalPages,
-hasPreviousPage,
-hasNextPage
+const createPaginationInformation = (page, perPage, count) => {
+  const totalPages = Math.ceil(count / perPage);
+  const hasPreviousPage = page > 1;
+  const hasNextPage = page < totalPages;
+  return {
+    page,
+    perPage,
+    totalItems: count,
+    totalPages,
+    hasPreviousPage,
+    hasNextPage,
+  };
+};
 
-}
-}
-
-export const getAllContacts =async ({
+export const getAllContacts = async ({
   page = 1,
-   perPage = 5,
-   sortOrder = SORT_ORDER.ASC,
+  perPage = 5,
+  sortOrder = SORT_ORDER.ASC,
   sortBy = 'name',
-filter ={},
+  filter = {},
 }) => {
   const skip = perPage * (page - 1);
 
   const contactsQuery = Contact.find();
+
+  if (filter.userId) {
+    contactsQuery.where('userId').equals(filter.userId);
+  }
 
   if (filter.contactType) {
     contactsQuery.where('contactType').equals(filter.contactType);
@@ -35,23 +38,24 @@ filter ={},
     contactsQuery.where('isFavourite').equals(filter.isFavourite);
   }
 
-  const[contactsAmount, contacts] = await Promise.all([
-    Contact.find().countDocuments(), 
+  const [contactsAmount, contacts] = await Promise.all([
+    Contact.find().merge(contactsQuery).countDocuments(),
     contactsQuery
-    .skip(skip)
-    .limit(perPage)
-    .sort({ [sortBy]: sortOrder })
-    .exec() ])
-  const paginationInformation = createPaginationInformation(page, perPage, contactsAmount);
- 
-
- 
+      .skip(skip)
+      .limit(perPage)
+      .sort({ [sortBy]: sortOrder })
+      .exec(),
+  ]);
+  const paginationInformation = createPaginationInformation(
+    page,
+    perPage,
+    contactsAmount,
+  );
 
   return {
-    contacts,
-    ...paginationInformation
-  }
-
+    data: contacts,
+    ...paginationInformation,
+  };
 };
 
 export const getContactById = async (contactId) => {
@@ -63,27 +67,10 @@ export const getContactById = async (contactId) => {
 };
 
 export const createContact = async (payload) => {
-  const newContact = await Contact.create(payload);
+  const newContact = await Contact.create({ ...payload, userId });
 
   return newContact;
 };
-
-//  export const updateContact = async (contactId, payload = {})=>{
-//    const rawResult = await Contact.findByIdAndUpdate(contactId , payload, {
-//       new: true,
-//       includeResultMetadata: true,
-//       });
-//       if (!rawResult && rawResult.value ) {
-//       throw createHttpError(404, 'Contact not found');
-
-//     }
-
-//    return {
-//       contact: rawResult.value,
-//       isNew: Boolean( rawResult.lastErrorObject.upserted),
-//    };
-
-//  }
 
 export const updateContact = async (contactId, payload = {}) => {
   const contact = await Contact.findByIdAndUpdate(contactId, payload, {

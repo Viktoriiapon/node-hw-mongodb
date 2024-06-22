@@ -1,4 +1,3 @@
-
 const parseNumber = (number, defaultNumber) => {
   if (typeof number !== 'string') return defaultNumber;
 
@@ -8,14 +7,12 @@ const parseNumber = (number, defaultNumber) => {
 
   return parsedNumber;
 };
-  
-  export const parsePaginationParams = (query) => {
-    const { page, perPage } = query;
-  
-    return {
-      page: parseNumber(page, 1),
-      perPage: parseNumber(perPage, 5),
-    };
-  };
 
-  
+export const parsePaginationParams = (query) => {
+  const { page, perPage } = query;
+
+  return {
+    page: parseNumber(page, 1),
+    perPage: parseNumber(perPage, 5),
+  };
+};
