@@ -5,6 +5,9 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
+import { sendEmail } from '../utils/sendMail.js';
+import { ENV_VARS } from '../constants/index.js';
+import { env } from '../utils/env.js';
 
 
 const createSession = () => {
@@ -103,8 +106,20 @@ const token = jwt.sign({
   {
     expiresIn: '5m',
   }
-)
-await SendmailTransport({
+); 
+try{
+  await sendEmail({
+    html: `
+    <h1>Hello</h1>
+    <p>Yor reset link: <a href="${env(ENV_VARS.FRONTEND_HOST)}/reset-password?token=${token}">Link</a>
+    </p>`,
+    to: email,
+    from: env(ENV_VARS.SMTP_USER),
+    subject: 'Reset your password',
   
-})
+  })
+}catch(err){ console.log(err)
+createHttpError(500, 'Problem with sending') }
+
+
 };
