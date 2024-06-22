@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { loginUserSchema, registerUserSchema } from '../validation/auth.js';
-import { loginUserController, logoutUserController, refreshTokenController, registerUserController } from '../controllers/auth.js';
+import { loginUserController, logoutUserController, refreshTokenController, registerUserController, sendResetEmailController } from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { authenticate } from '../middlewares/authenticate.js';
+import { sendResetPasswordSchema } from '../validation/sendResetPasswordSchema.js';
 
-const authRouter = Router();
+export const authRouter = Router();
 
 authRouter.post(
   '/register',
@@ -18,7 +19,7 @@ authRouter.post(
     ctrlWrapper(loginUserController),
   );
   authRouter.post(
-    '/refresh-token',
+    '/refresh',
     authenticate,
     ctrlWrapper(refreshTokenController),
   );
@@ -26,7 +27,14 @@ authRouter.post(
     '/logout',
     ctrlWrapper(logoutUserController),
   );
- 
+  authRouter.post('/refresh', authenticate, ctrlWrapper(refreshTokenController));
+  authRouter.post('/logout', authenticate, ctrlWrapper(logoutUserController));
 
-export default authRouter;
+  authRouter.post(
+    '/send-reset-email',
+    validateBody(sendResetPasswordSchema),
+    ctrlWrapper(sendResetEmailController),
+  );
+
+
 

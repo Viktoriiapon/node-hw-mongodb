@@ -4,7 +4,6 @@ import { createContactsController,
      getContactsByIdController,
       getContactsController,
        patchContactsController,
-        // putContactsController
      } from '../controllers/contacts.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { validateBody } from '../middlewares/validateBody.js';
@@ -28,8 +27,6 @@ contactsRouter.post('/',
   contactsRouter.patch('/:contactId',
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactsController));
-
-//   getContactsRouter.put('/contacts/:contactId', ctrlWrapper(putContactsController));
 
 contactsRouter.delete('/:contactId', ctrlWrapper(deleteContactsController));
 
