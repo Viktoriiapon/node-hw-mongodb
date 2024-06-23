@@ -2,6 +2,12 @@ import { model, Schema } from 'mongoose';
 
 const sessionSchema = new Schema(
   {
+    userId: {
+      type: Schema.ObjectId,
+      required: true,
+      unique: true,
+      ref: 'users',
+    },
     accessToken: {
       type: String,
       required: true,
@@ -18,12 +24,7 @@ const sessionSchema = new Schema(
       type: Date,
       required: true,
     },
-    userId: {
-      type: Schema.ObjectId,
-      required: true,
-      unique: true,
-      ref: 'users',
-    },
+  
   },
   {
     timestamps: true,

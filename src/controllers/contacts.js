@@ -46,7 +46,7 @@ const setAuthContactId = (req) => {
   return authContactId;
 };
 export const getContactsByIdController = async (req, res, next) => {
-  const authContactId = setAuthContactId(req); //додала для userId
+  const authContactId = setAuthContactId(req); 
   const contact = await getContactById(authContactId);
   if (!contact) {
     next(createHttpError(404, 'Contact not found'));
@@ -61,7 +61,7 @@ export const getContactsByIdController = async (req, res, next) => {
 };
 
 export const createContactsController = async (req, res) => {
-  const contact = await createContact({ userId: req.user._id, ...req.body }); //змінилв//
+  const contact = await createContact({ userId: req.user._id, ...req.body }); 
 
   res.status(201).json({
     status: 201,
