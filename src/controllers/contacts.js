@@ -9,6 +9,7 @@ import {
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFileToLocal } from '../utils/safeFileToLocal.js';
 
 
 export const getContactsController = async (req, res) => {
@@ -63,7 +64,10 @@ export const getContactsByIdController = async (req, res, next) => {
 };
 
 export const createContactsController = async (req, res) => {
-  const contact = await createContact({ userId: req.user._id, ...req.body });
+  
+
+  const { body, file } = req;
+  const contact = await createContact({ ...body, photo: file }, req.user._id );
 
   res.status(201).json({
     status: 201,

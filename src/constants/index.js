@@ -1,4 +1,10 @@
 import path from 'node:path';
+
+export const SORT_ORDER = {
+  ASC: 'asc',
+  DESC: 'desc',
+};
+
 export const ENV_VARS = {
   PORT: 'PORT',
   MONGODB_USER: 'MONGODB_USER',
@@ -12,15 +18,15 @@ export const ENV_VARS = {
   SMTP_FROM:'SMTP_FROM',
   JWT_SECRET:'JWT_SECRET',
   FRONTEND_HOST:'FRONTEND_HOST',
+  BACKEND_HOST:'BACKEND_HOST',
+  
+  CLOUD_NAME: 'CLOUD_NAME',
+  API_KEY: 'API_KEY',
+  API_SECRET: 'API_SECRET',
 };
 
-  // src/constants/index.js
-
-  export const SORT_ORDER = {
-    ASC: 'asc',
-    DESC: 'desc',
-  };
 
   export const TEMPLATE_DIR = path.join(process.cwd(), 'src', 'templates');
-// export const TEMP_UPLOAD_DIR = path.join(process.cwd(), 'temp');
-// export const UPLOAD_DIR = path.join(process.cwd(), 'upload');
+export const TEMP_UPLOAD_DIR = path.join(process.cwd(), 'temp');
+export const UPLOAD_DIR = path.join(process.cwd(), 'upload');
+

@@ -52,6 +52,7 @@ export const loginUserController = async (req, res, next) => {
   });
 };
 
+
 export const refreshTokenController = async (req, res) => {
   const session = await refreshSession({
     sessionId: req.cookies.sessionId,

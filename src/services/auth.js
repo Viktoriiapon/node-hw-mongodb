@@ -15,16 +15,17 @@ import { env } from '../utils/env.js';
 export const createUser = async (payload) => {
   const hashedPassword = await bcrypt.hash(payload.password, 10);
 
-  const user = await User.findOne({ email: payload.email });
+  // const user = await User.findOne({ email: payload.email });
 
-  if (user) {
-    throw createHttpError(409, 'Email in use');
-  }
+  // if (user) {
+  //   throw createHttpError(409, 'Email in use');
+  // }
   return await User.create({
     ...payload,
     password: hashedPassword,
   });
 };
+
 
 const createSession = () => {
   return {
@@ -36,13 +37,13 @@ const createSession = () => {
 };
 
 
-export const loginUser = async ({email, password}) => {
-  const user = await User.findOne({ email });
+export const loginUser = async (payload) => {
+  const user =    await User.findOne({email: payload.email});
 
   if (!user) {
     throw createHttpError(404, 'User is not found');
   }
-  const isEqual = await bcrypt.compare(password, user.password);
+  const isEqual = await bcrypt.compare(payload.password, user.password);
 
   if (!isEqual) {
     throw createHttpError(401, 'Unauthorized');
@@ -55,6 +56,7 @@ export const loginUser = async ({email, password}) => {
     ...createSession(),
   });
 };
+
 export const refreshSession = async ({ sessionId, refreshToken }) => {
   const session = await Session.findOne({
     _id: sessionId,
@@ -138,21 +140,52 @@ createHttpError(500, 'Problem with sending') }
 
 };
 
-export const resetPassword = async ({ token, password }) => {
-  let tokenPayload;
+// export const resetPassword = async ({ token, password }) => {
+//   let tokenPayload;
+//   try {
+//     tokenPayload = jwt.verify(token, env(ENV_VARS.JWT_SECRET));
+//   } catch (err) {
+//     throw createHttpError(401, err.message);
+//   }
+
+//   const hashedPassword = await bcrypt.hash(password, 10);
+
+//   await User.findOneAndUpdate(
+//     {
+//       _id: tokenPayload.sub,
+//       email: tokenPayload.email,
+//     },
+//     { password: hashedPassword },
+//   );
+// };
+//
+export const resetPassword = async (payload) => {
+  let entries;
+
   try {
-    tokenPayload = jwt.verify(token, env(ENV_VARS.JWT_SECRET));
+    entries = jwt.verify(payload.token, env('JWT_SECRET'));
   } catch (err) {
-    throw createHttpError(401, err.message);
+    if (err instanceof Error)
+      throw createHttpError(401, 'Token is expired or invalid.', {
+        detail: err.message,
+        cause: err,
+      });
+    throw err;
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = await UsersCollection.findOne({
+    email: entries.email,
+    _id: entries.sub,
+  });
 
-  await User.findOneAndUpdate(
-    {
-      _id: tokenPayload.sub,
-      email: tokenPayload.email,
-    },
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  const hashedPassword = await bcrypt.hash(payload.password, 10);
+
+  await UsersCollection.updateOne(
+    { _id: user._id },
     { password: hashedPassword },
   );
 };
